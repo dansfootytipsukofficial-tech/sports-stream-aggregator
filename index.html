@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Streams Aggregator</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: auto; padding: 20px; }
+        header { background: #222; color: white; padding: 20px; text-align: center; }
+        .stream { background: #f5f5f5; margin: 10px 0; padding: 15px; border-left: 5px solid #007acc; }
+        .site { font-weight: bold; color: #007acc; }
+        .timestamp { color: #777; font-size: 0.9em; }
+        a { color: #007acc; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        footer { margin-top: 40px; text-align: center; color: #999; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sports Streaming Aggregator</h1>
+        <p>Automatically updated list of live sports streams</p>
+        <p id="last-update"></p>
+    </header>
+    <main id="streams"></main>
+    <footer>
+        <p>Data updates hourly. This is a demo project.</p>
+    </footer>
+    <script>
+        fetch('streams.json')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('streams');
+                const updateEl = document.getElementById('last-update');
+                if (data.length === 0) {
+                    container.innerHTML = '<p>No streams found.</p>';
+                    return;
+                }
+                updateEl.textContent = 'Last fetch: ' + new Date().toLocaleString();
+                data.forEach(stream => {
+                    const div = document.createElement('div');
+                    div.className = 'stream';
+                    div.innerHTML = `
+                        <div class="site">${stream.site}</div>
+                        <div class="title">${stream.title}</div>
+                        <div><a href="${stream.link}" target="_blank">${stream.link}</a></div>
+                        <div class="timestamp">${stream.timestamp}</div>
+                    `;
+                    container.appendChild(div);
+                });
+            })
+            .catch(err => {
+                document.getElementById('streams').innerHTML = '<p>Failed to load streams.</p>';
+                console.error(err);
+            });
+    </script>
+</body>
+</html>
