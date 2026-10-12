@@ -1,32 +1,30 @@
 [
   {
-    "site": "https://buffstreams.tv",
-    "title": "Live streams from https://buffstreams.tv",
-    "link": "https://buffstreams.tv",
-    "timestamp": "2026-10-12T07:20:39.124735"
+    "name": "buffstreams.tv stream 1",
+    "url": "http-equiv=\"refresh\"",
+    "category": "Sports",
+    "description": "Extracted from https://buffstreams.tv",
+    "fetched_at": "2026-10-12T19:42:42.352804"
   },
   {
-    "site": "https://streamlive.to",
-    "title": "Live streams from https://streamlive.to",
-    "link": "https://streamlive.to",
-    "timestamp": "2026-10-12T07:20:42.267206"
+    "name": "streamlive.to stream 1",
+    "url": "https://www.streamlive.to/embedplayer.php?channel=77158&embedder=274252&autostart=true",
+    "category": "Sports",
+    "description": "Extracted from https://streamlive.to",
+    "fetched_at": "2026-10-12T19:42:44.156211"
   },
   {
-    "site": "https://lookmovie2.to",
-    "title": "Live streams from https://lookmovie2.to",
-    "link": "https://lookmovie2.to",
-    "timestamp": "2026-10-12T07:20:45.603822"
+    "name": "Reddit /r/soccerstreams",
+    "url": "https://www.reddit.com/r/soccerstreams/",
+    "category": "Community",
+    "description": "User‑posted soccer stream links",
+    "fetched_at": "2026-10-12T19:42:54.313731"
   },
   {
-    "site": "Reddit",
-    "title": "Reddit soccer streams",
-    "link": "https://reddit.com/r/soccerstreams",
-    "timestamp": "2026-10-12T07:20:54.451863"
-  },
-  {
-    "site": "SportMonks",
-    "title": "Premier League fixtures",
-    "link": "https://api.sportmonks.com/v3/football/fixtures",
-    "timestamp": "2026-10-12T07:20:54.451905"
+    "name": "SportMonks Fixtures",
+    "url": "https://api.sportmonks.com/v3/football/fixtures",
+    "category": "Data",
+    "description": "Live football fixtures via SportMonks API",
+    "fetched_at": "2026-10-12T19:42:54.313758"
   }
 ]
