@@ -3,55 +3,890 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports Streams Aggregator</title>
+    <title>SportStream – Live Sports, IPTV, Movies & Shows</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <style>
-        body { font-family: Arial, sans-serif; max-width: 1200px; margin: auto; padding: 20px; }
-        header { background: #222; color: white; padding: 20px; text-align: center; }
-        .stream { background: #f5f5f5; margin: 10px 0; padding: 15px; border-left: 5px solid #007acc; }
-        .site { font-weight: bold; color: #007acc; }
-        .timestamp { color: #777; font-size: 0.9em; }
-        a { color: #007acc; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        footer { margin-top: 40px; text-align: center; color: #999; }
+        :root {
+            --bg-dark: #0f0f0f;
+            --bg-darker: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --accent: #00a8ff;
+            --accent-light: #33bbff;
+            --text: #e0e0e0;
+            --text-dim: #a0a0a0;
+            --border: #333;
+            --success: #00d166;
+            --danger: #ff4757;
+            --warning: #ffa502;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .hidden {
+            display: none !important;
+        }
+
+        /* HEADER */
+        header {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+        }
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.2rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+        .logo span {
+            color: var(--text);
+        }
+        .nav-main {
+            display: flex;
+            gap: 30px;
+        }
+        .nav-main a {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 500;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-main a:hover,
+        .nav-main a.active {
+            color: var(--accent);
+        }
+        .nav-main a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            width: 200px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .search-box button {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: var(--accent-light);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 60px 0 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* SECTION */
+        .section {
+            margin: 50px 0;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+        }
+        .section-subtitle {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+        .view-all {
+            font-weight: 600;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .grid-2 {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+        .grid-3 {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        }
+
+        /* CARD */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 168, 255, 0.15);
+        }
+        .card-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+        }
+        .card-content {
+            padding: 20px;
+        }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .card-meta {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+        }
+        .card-desc {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.5;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 30px;
+        }
+        .card-live::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        .card-btn {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent);
+            padding: 6px 12px;
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        .card-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* LIVE EVENTS SPECIAL */
+        .live-card {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 20px;
+            align-items: center;
+            padding: 20px;
+            border-left: 4px solid var(--accent);
+        }
+        .live-teams {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .team-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--bg-darker);
+        }
+        .vs {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+        .live-info {
+            flex: 1;
+        }
+        .live-score {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: 5px;
+        }
+        .live-sport {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+        }
+        .live-time {
+            font-size: 0.85rem;
+            color: var(--warning);
+        }
+
+        /* CHANNELS */
+        .channel-card {
+            text-align: center;
+            padding: 25px 15px;
+        }
+        .channel-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin: 0 auto 15px;
+            border-radius: 12px;
+            background: var(--bg-darker);
+            padding: 10px;
+        }
+        .channel-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .channel-lang {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        /* PLAYER MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal {
+            background: var(--bg-card);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 1000px;
+            overflow: hidden;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .plyr {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--bg-darker);
+            border-top: 1px solid var(--border);
+            padding: 50px 0 30px;
+            margin-top: 50px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-col h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        .footer-links {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        .footer-links a {
+            color: var(--text-dim);
+            transition: color 0.3s;
+        }
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--bg-card);
+            border-radius: 50%;
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        .social-icons a:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-3px);
+        }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* ANIMATIONS */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .nav-main {
+                gap: 20px;
+            }
+            .search-box input {
+                width: 150px;
+            }
+            .hero h1 {
+                font-size: 3rem;
+            }
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+            .nav-main {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--bg-card);
+                flex-direction: column;
+                padding: 20px;
+                border-top: 1px solid var(--border);
+                clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+                transition: clip-path 0.4s;
+            }
+            .nav-main.active {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+            .search-box input {
+                width: 120px;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .live-card {
+                grid-template-columns: 1fr;
+            }
+            .modal {
+                width: 95%;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Sports Streaming Aggregator</h1>
-        <p>Automatically updated list of live sports streams</p>
-        <p id="last-update"></p>
+        <div class="container header-inner">
+            <a href="#" class="logo">Sport<span>Stream</span></a>
+            <div class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav class="nav-main" id="navMain">
+                <a href="#" class="active"><i class="fas fa-home"></i> Home</a>
+                <a href="#live"><i class="fas fa-tv"></i> Live Events</a>
+                <a href="#channels"><i class="fas fa-satellite-dish"></i> IPTV</a>
+                <a href="#movies"><i class="fas fa-film"></i> Movies</a>
+                <a href="#shows"><i class="fas fa-tv"></i> Shows</a>
+                <a href="#highlights"><i class="fas fa-play-circle"></i> Highlights</a>
+                <a href="#schedule"><i class="fas fa-calendar-alt"></i> Schedule</a>
+            </nav>
+            <div class="header-right">
+                <div class="search-box">
+                    <input type="text" placeholder="Search live events, movies..." id="searchInput">
+                    <button type="button" id="searchBtn"><i class="fas fa-search"></i></button>
+                </div>
+                <a href="#" class="btn-outline btn"><i class="fas fa-user"></i> Login</a>
+            </div>
+        </div>
     </header>
-    <main id="streams"></main>
+
+    <section class="hero">
+        <div class="container">
+            <h1>SPORTSTREAM</h1>
+            <p>The ultimate aggregator for live sports streams, IPTV channels, movies, and TV shows—updated in real‑time.</p>
+            <div class="hero-badges">
+                <div class="badge"><i class="fas fa-wifi"></i> 1000+ Live Channels</div>
+                <div class="badge"><i class="fas fa-film"></i> 10,000+ Movies</div>
+                <div class="badge"><i class="fas fa-globe"></i> Worldwide Coverage</div>
+                <div class="badge"><i class="fas fa-bolt"></i> Zero Buffering</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container" id="live">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Live Now</h2>
+                <p class="section-subtitle">Streaming right this second</p>
+            </div>
+            <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="grid grid-2" id="liveGrid">
+            <!-- Live events injected by JavaScript -->
+            <div class="card live-card">
+                <div class="live-teams">
+                    <img src="https://via.placeholder.com/50/333/fff?text=A" alt="Team A" class="team-logo">
+                    <span class="vs">VS</span>
+                    <img src="https://via.placeholder.com/50/333/fff?text=B" alt="Team B" class="team-logo">
+                </div>
+                <div class="live-info">
+                    <div class="live-score">2 : 1</div>
+                    <div class="live-sport">Football · Premier League</div>
+                    <div class="live-time">Live · 45'</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container" id="streams">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Latest Streams</h2>
+                <p class="section-subtitle">Automatically updated from top streaming sites</p>
+            </div>
+            <a href="#" class="view-all" onclick="refreshStreams()"><i class="fas fa-redo"></i> Refresh</a>
+        </div>
+        <div class="grid" id="streamsGrid">
+            <!-- Stream cards inserted by JS -->
+        </div>
+    </section>
+
+    <section class="section container" id="channels">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">TV Channels</h2>
+                <p class="section-subtitle">Popular live TV channels</p>
+            </div>
+            <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="grid grid-3">
+            <div class="card channel-card">
+                <img src="https://vidcdn.vip/logo/Sky_Sports_Premier_League-UK.png" alt="Sky Sports" class="channel-logo">
+                <div class="channel-name">Sky Sports PL</div>
+                <div class="channel-lang">UK · English</div>
+            </div>
+            <div class="card channel-card">
+                <img src="https://vidcdn.vip/logo/ESPN-USA.png" alt="ESPN" class="channel-logo">
+                <div class="channel-name">ESPN</div>
+                <div class="channel-lang">USA · English</div>
+            </div>
+            <div class="card channel-card">
+                <img src="https://vidcdn.vip/logo/Fox_Sports_1-USA.png" alt="Fox Sports" class="channel-logo">
+                <div class="channel-name">Fox Sports 1</div>
+                <div class="channel-lang">USA · English</div>
+            </div>
+            <div class="card channel-card">
+                <img src="https://vidcdn.vip/logo/beIN_Sports_1-France.png" alt="beIN Sports" class="channel-logo">
+                <div class="channel-name">beIN Sports 1</div>
+                <div class="channel-lang">France · French</div>
+            </div>
+            <div class="card channel-card">
+                <img src="https://vidcdn.vip/logo/TNT_Sports_2-UK.png" alt="TNT Sports" class="channel-logo">
+                <div class="channel-name">TNT Sports 2</div>
+                <div class="channel-lang">UK · English</div>
+            </div>
+            <div class="card channel-card">
+                <img src="https://vidcdn.vip/logo/Sport_5_Plus-Israel.png" alt="Sport 5" class="channel-logo">
+                <div class="channel-name">Sport 5 Plus</div>
+                <div class="channel-lang">Israel · Hebrew</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container" id="movies">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Popular Movies</h2>
+                <p class="section-subtitle">Trending movies of 2026</p>
+            </div>
+            <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <img src="https://image.tmdb.org/t/p/w500/bjiS5ipwxb9JFy3XRRN4OAilSeX.jpg" alt="Spider-Man" class="card-img">
+                <div class="card-content">
+                    <h3 class="card-title">Spider‑Man: Brand New Day</h3>
+                    <div class="card-meta">2026 · 8.4</div>
+                    <p class="card-desc">Fighting crime full‑time as Spider‑Man in a world that doesn't remember him—and the pressure of seeing his old friends move on without him—sparks a change in Peter Parker he may not have the power to control.</p>
+                    <div class="card-footer">
+                        <span class="card-live">HD</span>
+                        <a href="#" class="card-btn">Watch</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://image.tmdb.org/t/p/w500/i7UyjfPio0VFHB9rBUZSFyhOoM8.jpg" alt="Resident Evil" class="card-img">
+                <div class="card-content">
+                    <h3 class="card-title">Resident Evil</h3>
+                    <div class="card-meta">2026 · 7.3</div>
+                    <p class="card-desc">A new outbreak of the T‑virus threatens to wipe out humanity. A team of survivors must battle through hordes of the undead to find the source and a possible cure.</p>
+                    <div class="card-footer">
+                        <span class="card-live">HD</span>
+                        <a href="#" class="card-btn">Watch</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://image.tmdb.org/t/p/w500/4tTrW9dXCByS5wt2pXVWb58zNjz.jpg" alt="Insidious" class="card-img">
+                <div class="card-content">
+                    <h3 class="card-title">Insidious: Out of the Further</h3>
+                    <div class="card-meta">2026 · 7.7</div>
+                    <p class="card-desc">The Lambert family once again faces supernatural forces when a new entity from the Further crosses into our world, targeting their youngest child.</p>
+                    <div class="card-footer">
+                        <span class="card-live">HD</span>
+                        <a href="#" class="card-btn">Watch</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer>
-        <p>Data updates hourly. This is a demo project.</p>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>SportStream</h4>
+                    <p>The ultimate platform for live sports streaming, IPTV, movies and shows. Updated around the clock.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#live">Live Events</a></li>
+                        <li><a href="#channels">IPTV</a></li>
+                        <li><a href="#movies">Movies</a></li>
+                        <li><a href="#shows">TV Shows</a></li>
+                        <li><a href="#highlights">Highlights</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">DMCA</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Stay Updated</h4>
+                    <p>Subscribe to get notifications about new streams and updates.</p>
+                    <div class="search-box" style="margin-top:15px;">
+                        <input type="text" placeholder="Your email">
+                        <button type="button" class="btn" style="padding:8px 15px;">Join</button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 SportStream. All rights reserved. This site does not host any videos—it only aggregates publicly available streams.</p>
+                <p>Last fetch: <span id="lastFetch">10/12/2026, 7:19:44 PM</span></p>
+            </div>
+        </div>
     </footer>
+
+    <!-- MODAL PLAYER -->
+    <div class="modal-overlay" id="playerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="playerTitle">Live Stream</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <video id="player" playsinline controls>
+                    <source src="" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
-        fetch('streams.json')
-            .then(res => res.json())
-            .then(data => {
-                const container = document.getElementById('streams');
-                const updateEl = document.getElementById('last-update');
-                if (data.length === 0) {
-                    container.innerHTML = '<p>No streams found.</p>';
-                    return;
-                }
-                updateEl.textContent = 'Last fetch: ' + new Date().toLocaleString();
+        // Mobile nav toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMain = document.getElementById('navMain');
+        mobileToggle.addEventListener('click', () => {
+            navMain.classList.toggle('active');
+        });
+
+        // Search
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        searchBtn.addEventListener('click', () => {
+            const query = searchInput.value.trim();
+            if (query) {
+                alert(`Searching for: ${query}`);
+                // In real app you would filter content
+            }
+        });
+
+        // Modal
+        const playerModal = document.getElementById('playerModal');
+        const closeModal = document.getElementById('closeModal');
+        const playerTitle = document.getElementById('playerTitle');
+        const player = document.getElementById('player');
+        const playerInstance = new Plyr(player);
+
+        function openPlayer(title, src) {
+            playerTitle.textContent = title;
+            player.src = src;
+            playerInstance.source = {
+                type: 'video',
+                sources: [{ src: src, type: 'video/mp4' }]
+            };
+            playerModal.classList.add('active');
+            playerInstance.play();
+        }
+
+        closeModal.addEventListener('click', () => {
+            playerModal.classList.remove('active');
+            playerInstance.pause();
+        });
+
+        playerModal.addEventListener('click', (e) => {
+            if (e.target === playerModal) {
+                playerModal.classList.remove('active');
+                playerInstance.pause();
+            }
+        });
+
+        // Load streams from JSON
+        async function loadStreams() {
+            try {
+                const response = await fetch('streams.json');
+                const data = await response.json();
+                const grid = document.getElementById('streamsGrid');
+                grid.innerHTML = '';
                 data.forEach(stream => {
-                    const div = document.createElement('div');
-                    div.className = 'stream';
-                    div.innerHTML = `
-                        <div class="site">${stream.site}</div>
-                        <div class="title">${stream.title}</div>
-                        <div><a href="${stream.link}" target="_blank">${stream.link}</a></div>
-                        <div class="timestamp">${stream.timestamp}</div>
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <img src="https://via.placeholder.com/300x140/333/fff?text=${encodeURIComponent(stream.name)}" class="card-img">
+                        <div class="card-content">
+                            <h3 class="card-title">${stream.name}</h3>
+                            <div class="card-meta">${stream.category || 'Sports'}</div>
+                            <p class="card-desc">${stream.description || 'Live streaming from ' + stream.url}</p>
+                            <div class="card-footer">
+                                <span class="card-live">LIVE</span>
+                                <button class="card-btn" onclick="openPlayer('${stream.name}', '${stream.url}')">Watch</button>
+                            </div>
+                        </div>
                     `;
-                    container.appendChild(div);
+                    grid.appendChild(card);
                 });
-            })
-            .catch(err => {
-                document.getElementById('streams').innerHTML = '<p>Failed to load streams.</p>';
-                console.error(err);
-            });
+                document.getElementById('lastFetch').textContent = new Date().toLocaleString();
+            } catch (error) {
+                console.error('Failed to load streams:', error);
+                document.getElementById('streamsGrid').innerHTML = '<p class="card-desc">Failed to load streams. Please run the scraper.</p>';
+            }
+        }
+
+        function refreshStreams() {
+            fetch('/?refresh=1')
+                .then(() => loadStreams())
+                .catch(err => alert('Refresh error: ' + err));
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStreams();
+        });
     </script>
 </body>
 </html>
